@@ -3,6 +3,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 class hw4{
 
@@ -17,8 +18,28 @@ class hw4{
         public void addOneToVal(){this.val += 1;}
     }
     public static boolean finished = false;
-    
-    public static void backTrack(ArrayList<int[]> a, int k, ArrayList<int[]> input,
+
+    // ! TEST FUNCTION!
+    public static void printMatrix(int[][] a){
+        System.out.println("Matrix: ");
+        for(int i = 0; i < a.length; i++){
+            for(int j = 0; j < a[i].length; j++){
+                System.out.print(a[i][j] + " ");
+            }
+            System.out.println("");
+        }
+    }
+    public static void printArrayList(ArrayList<int[]> a){
+        for(int i = 0; i < a.size(); i++){
+            for(int j = 0; j < a.get(i).length; j++){
+                System.out.print(a.get(i)[j] + " ");
+            }
+            System.out.println();
+        }
+    }
+    // ! TEST FUNCTION!
+
+    public static void backTrack(int[][] a, int k, ArrayList<int[]> input,
                                 int MAXCANDIDATES, int[] universalSet){
         int[][] c = new int[MAXCANDIDATES][];
         dummyValue nc = new dummyValue(0);
@@ -27,16 +48,27 @@ class hw4{
 
         System.out.println("Backtrack!");
         if (isSolution(a, k, input, universalSet)){
-            processSolution();
+            processSolution(); 
         }
         else{
             k += 1;
             constructCandidates(a, k, input, c, nc, MAXCANDIDATES);     // updates c and nc
             System.out.println("nc: " + nc.getVal());
+            // ! Test Print
+            //System.out.println("NC: ----");
+            //printMatrix(c);
+            //System.out.println("A: ----------------");
+            //printMatrix(a);
+            System.out.println("Master Set: -----");
+            printArrayList(input);
+            // ! Test Print End
             for (i = 0; i < nc.getVal(); i++){
                 System.out.println("constructed?!");
-                
-                a.set(i, c[i]); // Comment
+                System.out.println(nc.getVal());
+                a[i] = Arrays.copyOf(c[i], c[i].length); // ! Problem, Not copying
+                //a.set(i, c[i]); // Comment
+                System.out.println("A: ----------------");
+                printMatrix(a);
                 backTrack(a, k, input, MAXCANDIDATES, universalSet);
                 if (finished) {
                     return;
@@ -46,12 +78,12 @@ class hw4{
 
     }
     // ! Get all unique numbers and put in currentSolution to compare to universal set
-    public static boolean isSolution(ArrayList<int[]> a, int k, ArrayList<int[]> input, int[] universalSet){
+    public static boolean isSolution(int[][] a, int k, ArrayList<int[]> input, int[] universalSet){
         ArrayList<Integer> currentSolution = new ArrayList<>();
-        for (int i = 0; i < a.size(); i++){ 
-            for (int j = 0; j < a.get(i).length; j++){
-                if(!currentSolution.contains(a.get(i)[j])){
-                    currentSolution.add(a.get(i)[j]);
+        for (int i = 0; i < a.length; i++){ 
+            for (int j = 0; j < a[i].length; j++){
+                if(!currentSolution.contains(a[i][j])){
+                    currentSolution.add(a[i][j]);
                 }
             }
         }
@@ -72,7 +104,7 @@ class hw4{
      * @param nc    e
      * @param MAX   maximum size of answer set
      */
-    public static void constructCandidates(ArrayList<int[]> a, int k, ArrayList<int[]> n,
+    public static void constructCandidates(int[][] a, int k, ArrayList<int[]> n,
                                      int[][] c, dummyValue nc, int MAX){
         System.out.println("constructedCandidate!");
 
@@ -82,7 +114,10 @@ class hw4{
 
         for (i = 1; i < k; i++){
             System.out.println("i: " + i);
-            inPerm[n.indexOf(a.get(i))] = true;
+            if(Arrays.equals(n.get(i), a[i])){
+                inPerm[i] = true;
+            } 
+            //inPerm[n.indexOf(a[i])] = true;
         }
         System.out.println("Done with i");
         for(i = 0; i < MAX; i++){
@@ -91,7 +126,8 @@ class hw4{
         
 
         nc.setVal(0);
-        for(i = 1; i < n.size(); i++){
+        System.out.println("Size of N: " + n.size());
+        for(i = 1; i < n.size() - 1; i++){
             System.out.println("k: " + i);
 
             if (!inPerm[i]) { // ! ??????
@@ -108,8 +144,8 @@ class hw4{
 
 
     public static void generatePermutations(ArrayList<int[]> masterSet, int MAX, int[] univ){
-        ArrayList<int[]> a = new ArrayList<int[]>();
-        
+        int[][] a = new int[MAX][0];
+
         backTrack(a, 0, masterSet, MAX, univ);
     }
     public static void main(String[] args) throws FileNotFoundException{
