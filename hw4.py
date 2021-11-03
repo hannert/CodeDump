@@ -1,12 +1,13 @@
 import time
 def backTrack(workingSet, counter, input): 
-    c = []
+    c = [None] * subSize
     nc = 0;
 
     if(isSolution(workingSet)):
         processSolution(workingSet)
     else:
         counter += 1
+        constructCandidates(workingSet, counter, input, c, nc)
         for x in range(nc):
             workingSet.append(x)
             backTrack(workingSet, counter, input)
@@ -14,10 +15,16 @@ def backTrack(workingSet, counter, input):
                 return
 
 
-def constructCandidates(workingSet, counter, input, c, nc):
-    inPerm = [False for x in subSize] # Initialize a false for each element 
-    for 
-
+def constructCandidates(workingSet, counter, n, c, nc):
+    inPerm = [False] * subSize # Initialize a false for each element 
+    newCounter = int(counter)
+    for i in range(1, newCounter):
+        inPerm[workingSet[i]] = True
+    nc = 0
+    for i in range(1, int(n) + 1):
+        if inPerm[i] is False:
+            c[nc] = i
+            nc += 1
 
 def processSolution(solution):
     finished = True
@@ -61,5 +68,5 @@ if __name__ == "__main__":
         print(sets)
     
     workingSet = []
-    backtrack(workingSet, 0, mySets)
+    backTrack(workingSet, 0, mySets)
     print("Finished in " + str(round((time.time() - startTime) * 1000)) + "ms")

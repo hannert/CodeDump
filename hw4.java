@@ -47,37 +47,19 @@ class hw4{
                                 int MAXCANDIDATES, int[] universalSet){
         int[][] c = new int[MAXCANDIDATES][];
         dummyValue nc = new dummyValue(0);
-        
         int i;
-        System.out.println("MasterSet: ");
-        //printArrayAddress(input);
-
-        System.out.println("Backtrack!");
         if (isSolution(a, k, input, universalSet)){
-            processSolution(); 
+            processSolution(a); 
         }
         else{
             k += 1;
             constructCandidates(a, k, input, c, nc, MAXCANDIDATES);     // updates c and nc
-            System.out.println("nc: " + nc.getVal());
-            // ! Test Print
-            //System.out.println("NC: ----");
-            //printMatrix(c);
-            //System.out.println("A: ----------------");
-            //printMatrix(a);
-            // System.out.println("Master Set: -----");
-            // printArrayList(input);
-            // ! Test Print End
-            for (i = 0; i < nc.getVal(); i++){
-                System.out.println("constructed?!");
-                System.out.println(nc.getVal());
 
-                //a[i] = Arrays.copyOf(c[i], c[i].length); // ! Problem, Not copying
+            for (i = 0; i < nc.getVal(); i++){
                 a[i] = c[i];
 
-                //a.set(i, c[i]); // Comment
-                System.out.println("A: ----------------");
-                printMatrix(a);
+                // System.out.println("A: ----------------");
+                // printMatrix(a);
                 backTrack(a, k, input, MAXCANDIDATES, universalSet);
                 if (finished) {
                     return;
@@ -101,7 +83,8 @@ class hw4{
         }
         return true;
     }
-    public static void processSolution(){
+    public static void processSolution(int[][] a){
+        printMatrix(a);
         System.out.println("Done");
     }
     /**
@@ -115,53 +98,19 @@ class hw4{
      */
     public static void constructCandidates(int[][] a, int k, int[][] n,
                                      int[][] c, dummyValue nc, int MAX){
-        System.out.println("constructedCandidate!");
-
         int i;
         boolean inPerm[] = new boolean[MAX];
-        System.out.println("k: " + k);
-
-
-        // ! Array comparison not working
         for (i = 1; i < k; i++){
-            //System.out.println("i: " + i);
-            // for(int j = 0; j < a.length; j++){
-            //     if(Arrays.equals(a[j], n.get(i))){
-            //         inPerm[i] = true;
-            //         System.out.println("Changed");
-            //     } 
-            // }
-            //if(n.contains(a[i])) System.out.println("n contains: " + i);
             for(int j = 0; j < n.length; j++){
                 inPerm[j] = true;
             }
-            System.out.println(a[i]);
-            // if(Arrays.equals(n.get(i), a[i])){
-            //     inPerm[i] = true;
-            // } 
-            //inPerm[n.indexOf(a[i])] = true;
         }
-        // System.out.println("Done with i");
-        // for(i = 0; i < MAX; i++){
-        //     System.out.println(inPerm[i]);
-        // }
-        
-
         nc.setVal(0);
-        // System.out.println("Size of N: " + n.size());
         for(i = 1; i < n.length - 1; i++){
-            System.out.println("k: " + i);
-
             if (!inPerm[i]) { // ! ??????
                 c[nc.getVal()] = n[i];
                 nc.addOneToVal(); // nc++
-                System.out.println("nc: " + nc.getVal());
             }
-        }
-
-        System.out.println("Done with n");
-        for(i = 0; i < nc.getVal(); i++){
-            System.out.println("First elem: " + c[i][0]);
         }
     }
 
@@ -218,28 +167,6 @@ class hw4{
                 }
                 myList[i] = tempSet; // Add to myList
             }
-            // while ((line = br.readLine()) != null){
-            //     String[] temp = line.split(" ");
-            //     int[] tempSet = new int[temp.length];
-            //     for(int i = 0; i < temp.length; i++){
-            //         tempSet[i] = Integer.parseInt(temp[i]);
-            //     }
-            //     myList[lineNumber - 2] = tempSet; // Add to myList
-            //     lineNumber++;
-            // }
-            
-            // System.out.println("Universal Set: ");
-            // for(int i = 0; i < myArray.length; i++){
-            //     System.out.print(myArray[i] + " ");
-            // }
-            // System.out.println();
-            // for(int i = 0; i < myList.size(); i++){
-            //     System.out.print(myList.get(i));
-            //     // for(int j = 0; j < myList.get(i).length; j++){
-            //     //     System.out.print(myList.get(i)[j]);
-            //     // }
-            //     System.out.println("");
-            // }
 
             generatePermutations(myList, MAXCANDIDATES, myArray);
                 // lineNumber++;
@@ -247,12 +174,7 @@ class hw4{
         } catch(Exception e){
             System.out.println(e);
         }
-        // for(int i = 0; i < myArray.length; i++){
-        //     for(int j = 0; i < myArray[i].length; j++){
-        //         System.out.print(myArray[i][j]);
-        //     }
-        //     System.out.println("");
-        // }
+
         long stopTime = System.currentTimeMillis();
         System.out.println("Time taken: " + (stopTime - startTime) + "ms");
     }
