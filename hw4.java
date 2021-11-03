@@ -3,7 +3,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 class hw4{
 
@@ -44,14 +43,14 @@ class hw4{
     }
     // ! TEST FUNCTION!
 
-    public static void backTrack(int[][] a, int k, ArrayList<int[]> input,
+    public static void backTrack(int[][] a, int k, int[][] input,
                                 int MAXCANDIDATES, int[] universalSet){
         int[][] c = new int[MAXCANDIDATES][];
         dummyValue nc = new dummyValue(0);
         
         int i;
         System.out.println("MasterSet: ");
-        printArrayAddress(input);
+        //printArrayAddress(input);
 
         System.out.println("Backtrack!");
         if (isSolution(a, k, input, universalSet)){
@@ -88,7 +87,7 @@ class hw4{
 
     }
     // ! Get all unique numbers and put in currentSolution to compare to universal set
-    public static boolean isSolution(int[][] a, int k, ArrayList<int[]> input, int[] universalSet){
+    public static boolean isSolution(int[][] a, int k, int[][] input, int[] universalSet){
         ArrayList<Integer> currentSolution = new ArrayList<>();
         for (int i = 0; i < a.length; i++){ 
             for (int j = 0; j < a[i].length; j++){
@@ -114,7 +113,7 @@ class hw4{
      * @param nc    e
      * @param MAX   maximum size of answer set
      */
-    public static void constructCandidates(int[][] a, int k, ArrayList<int[]> n,
+    public static void constructCandidates(int[][] a, int k, int[][] n,
                                      int[][] c, dummyValue nc, int MAX){
         System.out.println("constructedCandidate!");
 
@@ -132,55 +131,64 @@ class hw4{
             //         System.out.println("Changed");
             //     } 
             // }
-            if(n.contains(a[i])) System.out.println("n contains: " + i);
+            //if(n.contains(a[i])) System.out.println("n contains: " + i);
+            for(int j = 0; j < n.length; j++){
+                inPerm[j] = true;
+            }
             System.out.println(a[i]);
             // if(Arrays.equals(n.get(i), a[i])){
             //     inPerm[i] = true;
             // } 
             //inPerm[n.indexOf(a[i])] = true;
         }
-        System.out.println("Done with i");
-        for(i = 0; i < MAX; i++){
-            System.out.println(inPerm[i]);
-        }
+        // System.out.println("Done with i");
+        // for(i = 0; i < MAX; i++){
+        //     System.out.println(inPerm[i]);
+        // }
         
 
         nc.setVal(0);
-        System.out.println("Size of N: " + n.size());
-        for(i = 1; i < n.size() - 1; i++){
+        // System.out.println("Size of N: " + n.size());
+        for(i = 1; i < n.length - 1; i++){
             System.out.println("k: " + i);
 
             if (!inPerm[i]) { // ! ??????
-                c[nc.getVal()] = n.get(i);
+                c[nc.getVal()] = n[i];
                 nc.addOneToVal(); // nc++
                 System.out.println("nc: " + nc.getVal());
             }
         }
+
         System.out.println("Done with n");
         for(i = 0; i < nc.getVal(); i++){
             System.out.println("First elem: " + c[i][0]);
         }
     }
 
-
-    public static void generatePermutations(ArrayList<int[]> masterSet, int MAX, int[] univ){
+    public static void generatePermutations(int[][] masterSet, int MAX, int[] univ){
         int[][] a = new int[MAX][0];
 
         backTrack(a, 0, masterSet, MAX, univ);
     }
+    // public static void generatePermutations(ArrayList<int[]> masterSet, int MAX, int[] univ){
+    //     int[][] a = new int[MAX][0];
+
+    //     backTrack(a, 0, masterSet, MAX, univ);
+    // }
     public static void main(String[] args) throws FileNotFoundException{
         long startTime = System.currentTimeMillis();
         int MAXCANDIDATES = 0;
         int UNIVERSALSET = 0;
 
 
-        ArrayList<int[]> myList = new ArrayList<int[]>();
+        //ArrayList<int[]> myList = new ArrayList<int[]>();
         File file = new File("s-X-12-6.txt");
         int lineNumber = 0;
         int[] myArray = new int[0];
-
+        
         try (BufferedReader br = new BufferedReader(new FileReader(file))){
             String line;
+            int[][] myList = new int[0][0];
             while (lineNumber <= 1 && (line = br.readLine()) != null){
                 if (lineNumber == 0){
                     UNIVERSALSET = Integer.parseInt(line);
@@ -193,19 +201,32 @@ class hw4{
                 else if (lineNumber == 1) {
                     MAXCANDIDATES = Integer.parseInt(line);
                     System.out.println("MAX " + MAXCANDIDATES);
+                    myList = new int[MAXCANDIDATES][];
 
                 }
                 lineNumber++;
             }
-            while ((line = br.readLine()) != null){
+            for(int i = 0; i < MAXCANDIDATES; i++){
+                line = br.readLine();
+                System.out.println(line);
                 String[] temp = line.split(" ");
                 int[] tempSet = new int[temp.length];
-                for(int i = 0; i < temp.length; i++){
-                    tempSet[i] = Integer.parseInt(temp[i]);
+                for(int j = 0; j < temp.length; j++){
+                    int tem = Integer.parseInt(temp[j]);
+                    //tempSet[i] = Integer.parseInt(temp[i]);
+                    tempSet[j] = tem;
                 }
-                myList.add(tempSet);
-                lineNumber++;
+                myList[i] = tempSet; // Add to myList
             }
+            // while ((line = br.readLine()) != null){
+            //     String[] temp = line.split(" ");
+            //     int[] tempSet = new int[temp.length];
+            //     for(int i = 0; i < temp.length; i++){
+            //         tempSet[i] = Integer.parseInt(temp[i]);
+            //     }
+            //     myList[lineNumber - 2] = tempSet; // Add to myList
+            //     lineNumber++;
+            // }
             
             // System.out.println("Universal Set: ");
             // for(int i = 0; i < myArray.length; i++){
