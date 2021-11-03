@@ -37,6 +37,11 @@ class hw4{
             System.out.println();
         }
     }
+    public static void printArrayAddress(ArrayList<int[]> a){
+        for(int i = 0; i < a.size(); i++){
+            System.out.println(a.get(i));
+        }
+    }
     // ! TEST FUNCTION!
 
     public static void backTrack(int[][] a, int k, ArrayList<int[]> input,
@@ -45,6 +50,8 @@ class hw4{
         dummyValue nc = new dummyValue(0);
         
         int i;
+        System.out.println("MasterSet: ");
+        printArrayAddress(input);
 
         System.out.println("Backtrack!");
         if (isSolution(a, k, input, universalSet)){
@@ -59,13 +66,16 @@ class hw4{
             //printMatrix(c);
             //System.out.println("A: ----------------");
             //printMatrix(a);
-            System.out.println("Master Set: -----");
-            printArrayList(input);
+            // System.out.println("Master Set: -----");
+            // printArrayList(input);
             // ! Test Print End
             for (i = 0; i < nc.getVal(); i++){
                 System.out.println("constructed?!");
                 System.out.println(nc.getVal());
-                a[i] = Arrays.copyOf(c[i], c[i].length); // ! Problem, Not copying
+
+                //a[i] = Arrays.copyOf(c[i], c[i].length); // ! Problem, Not copying
+                a[i] = c[i];
+
                 //a.set(i, c[i]); // Comment
                 System.out.println("A: ----------------");
                 printMatrix(a);
@@ -112,11 +122,21 @@ class hw4{
         boolean inPerm[] = new boolean[MAX];
         System.out.println("k: " + k);
 
+
+        // ! Array comparison not working
         for (i = 1; i < k; i++){
-            System.out.println("i: " + i);
-            if(Arrays.equals(n.get(i), a[i])){
-                inPerm[i] = true;
-            } 
+            //System.out.println("i: " + i);
+            // for(int j = 0; j < a.length; j++){
+            //     if(Arrays.equals(a[j], n.get(i))){
+            //         inPerm[i] = true;
+            //         System.out.println("Changed");
+            //     } 
+            // }
+            if(n.contains(a[i])) System.out.println("n contains: " + i);
+            System.out.println(a[i]);
+            // if(Arrays.equals(n.get(i), a[i])){
+            //     inPerm[i] = true;
+            // } 
             //inPerm[n.indexOf(a[i])] = true;
         }
         System.out.println("Done with i");
@@ -177,33 +197,29 @@ class hw4{
                 }
                 lineNumber++;
             }
-            //myArray = new int[MAXCANDIDATES][];
             while ((line = br.readLine()) != null){
                 String[] temp = line.split(" ");
-                //     for(int i = 0; i < temp.length; i++){
-                //         System.out.print(temp[i] + " ");
-                //     }
-                // System.out.println("");
                 int[] tempSet = new int[temp.length];
                 for(int i = 0; i < temp.length; i++){
                     tempSet[i] = Integer.parseInt(temp[i]);
                 }
-                //myArray[lineNumber - 2] = tempSet;
                 myList.add(tempSet);
                 lineNumber++;
             }
+            
+            // System.out.println("Universal Set: ");
+            // for(int i = 0; i < myArray.length; i++){
+            //     System.out.print(myArray[i] + " ");
+            // }
+            // System.out.println();
+            // for(int i = 0; i < myList.size(); i++){
+            //     System.out.print(myList.get(i));
+            //     // for(int j = 0; j < myList.get(i).length; j++){
+            //     //     System.out.print(myList.get(i)[j]);
+            //     // }
+            //     System.out.println("");
+            // }
 
-            System.out.println("Universal Set: ");
-            for(int i = 0; i < myArray.length; i++){
-                System.out.print(myArray[i] + " ");
-            }
-            System.out.println();
-            for(int i = 0; i < myList.size(); i++){
-                for(int j = 0; j < myList.get(i).length; j++){
-                    System.out.print(myList.get(i)[j]);
-                }
-                System.out.println("");
-            }
             generatePermutations(myList, MAXCANDIDATES, myArray);
                 // lineNumber++;
             
